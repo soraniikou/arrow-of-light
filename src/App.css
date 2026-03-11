@@ -1,0 +1,1013 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 今月の目標フェード表示 ── */
+.goal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  animation: goal-fade 3s ease-in-out forwards;
+  pointer-events: none;
+}
+
+.goal-box {
+  max-width: 85vw;
+  padding: 1.5rem 2rem;
+  border: 1.5px solid rgba(100, 180, 255, 0.7);
+  border-radius: 1rem;
+  box-shadow:
+    0 0 24px rgba(80, 160, 255, 0.4),
+    0 0 60px rgba(60, 140, 255, 0.2),
+    inset 0 0 20px rgba(80, 160, 255, 0.08);
+  background: rgba(4, 12, 32, 0.75);
+}
+
+.goal-label {
+  display: block;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  color: rgba(180, 220, 255, 0.9);
+  margin-bottom: 0.6rem;
+}
+
+.goal-text {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #fff;
+  margin: 0;
+}
+
+.goal-item {
+  margin: 0 0 0.4rem 0;
+}
+.goal-item:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes goal-fade {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a1a;
+}
+
+.scene {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  cursor: crosshair;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+/* Sky blue → deep indigo gradient */
+.gradient-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    #5ecff5 0%,
+    #3ab4e8 12%,
+    #1a7fcc 28%,
+    #0f4fa8 48%,
+    #072a7a 68%,
+    #041550 84%,
+    #020a30 100%
+  );
+  z-index: 0;
+}
+
+/* Subtle star-like scattered light dots */
+.gradient-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 1px 1px at 15% 72%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 33% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(ellipse 1.5px 1.5px at 58% 65%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 76% 88%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 90% 73%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 44% 91%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(ellipse 1.5px 1.5px at 8% 85%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(ellipse 1px 1px at 62% 95%, rgba(255,255,255,0.4) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ── Heroine ── */
+.heroine-wrap {
+  position: absolute;
+  left: 62%;
+  top: 38%;
+  transform: translateX(-50%);
+  transform-style: preserve-3d;
+  perspective: 800px;
+  z-index: 15;
+  /* pointer-events: none はボタン用に外す — 子要素で個別制御 */
+  pointer-events: none;
+  animation: heroine-float 4.8s ease-in-out infinite;
+  will-change: transform, top;
+}
+
+.heroine-img {
+  display: block;
+  /* Width relative to viewport — big enough to command the scene */
+  width: clamp(260px, 42vw, 600px);
+  height: auto;
+  filter:
+    drop-shadow(0 0 18px rgba(180, 230, 255, 0.65))
+    drop-shadow(0 0 48px rgba(100, 180, 255, 0.35));
+  animation: heroine-glow-pulse 3.2s ease-in-out infinite alternate;
+}
+
+/* Soft radial cloud-glow beneath the figure */
+.heroine-cloud-glow {
+  position: absolute;
+  bottom: -8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 38%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.30) 0%,
+    rgba(200, 235, 255, 0.14) 45%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+@keyframes heroine-float {
+  0%   { top: 38%; }
+  50%  { top: 35.5%; }
+  100% { top: 38%; }
+}
+
+@keyframes heroine-glow-pulse {
+  from { filter: drop-shadow(0 0 14px rgba(180,230,255,0.55)) drop-shadow(0 0 40px rgba(100,180,255,0.28)); }
+  to   { filter: drop-shadow(0 0 28px rgba(200,240,255,0.85)) drop-shadow(0 0 70px rgba(140,210,255,0.50)); }
+}
+
+/* ── Bubble hint label ── */
+.bubble-hint {
+  position: absolute;
+  bottom: 18vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  pointer-events: none;
+  text-align: center;
+  animation: hint-fade 2.8s ease-in-out infinite alternate;
+}
+
+.bubble-hint span {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: clamp(0.65rem, 1.6vw, 0.9rem);
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  color: rgba(200, 235, 255, 0.55);
+  text-shadow: 0 0 12px rgba(120, 200, 255, 0.5);
+}
+
+@keyframes hint-fade {
+  from { opacity: 0.45; }
+  to   { opacity: 1; }
+}
+
+/* Title overlay */
+.title-overlay {
+  position: absolute;
+  bottom: 10vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow:
+    0 0 20px rgba(120, 220, 255, 0.8),
+    0 0 50px rgba(80, 180, 255, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.subtitle {
+  margin-top: 0.6rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: rgba(200, 235, 255, 0.65);
+  text-shadow: 0 0 16px rgba(100, 200, 255, 0.6);
+}
+
+/* ── Heroine arrow hit-zone button ── */
+.heroine-arrow-btn {
+  position: absolute;
+  /* Upper-right area of the heroine image where the bow/arrow is drawn */
+  top: 8%;
+  right: 4%;
+  width: 40%;
+  height: 42%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  pointer-events: all;   /* ← 親の none を上書き */
+  border-radius: 50% 50% 40% 40%;
+  z-index: 16;           /* ← heroine-wrap(15) より上 */
+  outline: none;
+}
+
+.heroine-arrow-btn:hover .heroine-arrow-glow,
+.heroine-arrow-btn:focus .heroine-arrow-glow {
+  opacity: 1;
+}
+
+.heroine-arrow-glow {
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse at 60% 50%,
+    rgba(180, 240, 255, 0.22) 0%,
+    rgba(120, 200, 255, 0.08) 55%,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  animation: arrow-btn-pulse 2.0s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes arrow-btn-pulse {
+  0%   { opacity: 0.18; }
+  50%  { opacity: 0.65; }
+  100% { opacity: 0.18; }
+}
+
+/* Click hint label — always visible near heroine's bow hand */
+.heroine-arrow-hint {
+  position: absolute;
+  /* Just below and slightly right of the arrow btn area */
+  top: 48%;
+  right: -10%;
+  width: auto;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: hint-float 2.4s ease-in-out infinite alternate;
+  z-index: 16;
+}
+
+.heroine-arrow-hint span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: clamp(0.6rem, 1.4vw, 0.82rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: rgba(210, 242, 255, 0.82);
+  text-shadow:
+    0 0 10px rgba(140, 210, 255, 0.7),
+    0 0 22px rgba(100, 180, 255, 0.4);
+  padding: 0.28em 0.7em;
+  border-radius: 2em;
+  background: rgba(10, 20, 60, 0.35);
+  border: 1px solid rgba(160, 220, 255, 0.25);
+  backdrop-filter: blur(4px);
+}
+
+/* Animated cursor dot */
+.heroine-arrow-hint::before {
+  content: '✦';
+  position: absolute;
+  left: -1.2em;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(200, 240, 255, 0.9);
+  font-size: 0.9em;
+  animation: cursor-blink 1.1s ease-in-out infinite;
+}
+
+@keyframes hint-float {
+  from { transform: translateY(0); opacity: 0.7; }
+  to   { transform: translateY(-5px); opacity: 1; }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}
+
+/* ── ArrowShot overlay ── */
+.arrowshot-veil {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 8, 28, 0.55);
+  z-index: 100;
+  backdrop-filter: blur(2px);
+  animation: veil-in 0.3s ease forwards;
+}
+
+@keyframes veil-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.arrowshot-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 101;
+}
+
+/* Container for weapons (no line element — line is drawn on canvas) */
+.weapons-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 102;
+  pointer-events: none;
+}
+
+/* weapon-btn uses inline left/top — must be fixed to resolve against viewport */
+.weapon-btn {
+  position: fixed !important;
+}
+
+/* ── Symbol buttons (the 7 icons after arrow lands) ── */
+.symbol-btn {
+  width: 4rem;
+  height: auto;
+  min-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.symbol-tap {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.98);
+  text-transform: lowercase;
+  text-shadow: 0 0 8px rgba(255,255,255,0.6), 0 1px 2px rgba(0,0,0,0.3);
+  animation: tap-pulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes tap-pulse {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+.symbol-icon {
+  font-size: clamp(1.8rem, 4.5vw, 3rem) !important;
+  line-height: 1;
+  display: block;
+  animation: symbol-float 3s ease-in-out infinite alternate;
+  will-change: transform;
+  /* stagger via parent animationDelay carried through */
+}
+
+/* Each symbol gets a subtly different float phase via nth-child-like offset —
+   achieved by the animationDelay set inline on the parent */
+.symbol-btn:nth-child(odd)  .symbol-icon { animation-direction: alternate; }
+.symbol-btn:nth-child(even) .symbol-icon { animation-direction: alternate-reverse; }
+
+@keyframes symbol-float {
+  from { transform: translateY(0px) scale(1);    }
+  to   { transform: translateY(-7px) scale(1.06); }
+}
+
+/* message-symbol styling */
+.message-symbol {
+  border-color: rgba(200, 230, 255, 0.45);
+}
+.message-symbol .message-text {
+  color: rgba(220, 245, 255, 0.95);
+}
+
+/* 矛：刀の銀色部分を1.3倍の長さに */
+.sym-spear {
+  transform-origin: top center;
+  animation: symbol-float-spear 3s ease-in-out infinite alternate;
+}
+@keyframes symbol-float-spear {
+  from { transform: scaleY(1.3) translateY(0); }
+  to   { transform: scaleY(1.3) translateY(-7px); }
+}
+
+/* ── Individual symbol colours ── */
+.sym-heart {
+  color: #ff5577;
+  filter:
+    drop-shadow(0 0 8px rgba(255, 80, 100, 0.85))
+    drop-shadow(0 0 20px rgba(255, 60, 90, 0.5)) !important;
+  animation: symbol-float 3s ease-in-out infinite alternate,
+             heart-pulse 1.6s ease-in-out infinite alternate !important;
+}
+@keyframes heart-pulse {
+  from { color: #ff5577; }
+  to   { color: #ff99bb; }
+}
+
+.sym-spade {
+  color: #cc66ff;
+  filter:
+    drop-shadow(0 0 8px rgba(180, 60, 255, 0.85))
+    drop-shadow(0 0 22px rgba(150, 40, 255, 0.5)) !important;
+}
+
+.sym-club {
+  color: #44dd88;
+  filter:
+    drop-shadow(0 0 8px rgba(40, 220, 100, 0.85))
+    drop-shadow(0 0 20px rgba(20, 200, 80, 0.5)) !important;
+}
+
+/* Sparkling diamond — animated rainbow shimmer */
+.sym-diamond {
+  color: #aaecff;
+  filter:
+    drop-shadow(0 0 6px rgba(180, 240, 255, 0.9))
+    drop-shadow(0 0 18px rgba(140, 210, 255, 0.6)) !important;
+  animation: symbol-float 3s ease-in-out infinite alternate,
+             diamond-sparkle 1.2s linear infinite !important;
+}
+@keyframes diamond-sparkle {
+  0%   { color: #aaf0ff; filter: drop-shadow(0 0 8px #aaf0ff) drop-shadow(0 0 22px #88ddff); }
+  25%  { color: #ffeeaa; filter: drop-shadow(0 0 10px #ffe080) drop-shadow(0 0 26px #ffcc44); }
+  50%  { color: #ffaaee; filter: drop-shadow(0 0 8px #ff88dd) drop-shadow(0 0 22px #ff55cc); }
+  75%  { color: #aaffcc; filter: drop-shadow(0 0 10px #88ffbb) drop-shadow(0 0 26px #44ffaa); }
+  100% { color: #aaf0ff; filter: drop-shadow(0 0 8px #aaf0ff) drop-shadow(0 0 22px #88ddff); }
+}
+
+/* オパール宝石 — 虹色のきらめき */
+.sym-opal {
+  animation: symbol-float 3s ease-in-out infinite alternate,
+             opal-shimmer 2.5s linear infinite !important;
+}
+@keyframes opal-shimmer {
+  0%   { filter: drop-shadow(0 0 10px #aaf0ff) drop-shadow(0 0 24px #88ddff); }
+  20%  { filter: drop-shadow(0 0 12px #88ffaa) drop-shadow(0 0 28px #44ff88); }
+  40%  { filter: drop-shadow(0 0 10px #ffaacc) drop-shadow(0 0 24px #ff88bb); }
+  60%  { filter: drop-shadow(0 0 12px #ffcc88) drop-shadow(0 0 28px #ffaa44); }
+  80%  { filter: drop-shadow(0 0 10px #aaccff) drop-shadow(0 0 24px #88aaff); }
+  100% { filter: drop-shadow(0 0 10px #aaf0ff) drop-shadow(0 0 24px #88ddff); }
+}
+
+/* カレンダー */
+.sym-calendar {
+  filter: drop-shadow(0 0 10px rgba(255, 200, 100, 0.8))
+          drop-shadow(0 0 22px rgba(255, 180, 60, 0.5)) !important;
+}
+
+/* arrow line is now drawn on canvas — this element is unused */
+.weapons-arrow-line { display: none; }
+
+/* ── Weapon buttons — no border, no background, pure icon ── */
+.weapon-btn {
+  position: fixed;   /* overridden by inline style for exact placement */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  pointer-events: all;
+  z-index: 103;
+  transition: transform 0.18s ease, filter 0.18s ease;
+  animation: weapon-appear 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  outline: none;
+}
+
+.weapon-btn:hover {
+  transform: scale(1.22) translateY(-4px);
+}
+
+.spear-btn { animation-delay: 0.05s; }
+.shield-btn { animation-delay: 0.20s; }
+
+@keyframes weapon-appear {
+  from { opacity: 0; transform: scale(0.2) translateY(20px); filter: blur(8px); }
+  to   { opacity: 1; transform: scale(1)  translateY(0);    filter: blur(0); }
+}
+
+.weapon-icon {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1;
+  filter:
+    drop-shadow(0 0 12px rgba(200, 235, 255, 0.9))
+    drop-shadow(0 0 28px rgba(140, 210, 255, 0.55));
+  animation: weapon-icon-pulse 1.8s ease-in-out infinite alternate;
+}
+
+.weapon-btn:hover .weapon-icon {
+  filter:
+    drop-shadow(0 0 20px rgba(220, 245, 255, 1))
+    drop-shadow(0 0 50px rgba(160, 220, 255, 0.8));
+}
+
+@keyframes weapon-icon-pulse {
+  from { filter: drop-shadow(0 0 10px rgba(180,230,255,0.7)) drop-shadow(0 0 22px rgba(120,200,255,0.4)); }
+  to   { filter: drop-shadow(0 0 20px rgba(220,245,255,1))   drop-shadow(0 0 45px rgba(160,225,255,0.7)); }
+}
+
+.weapon-label {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', serif;
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: rgba(220, 245, 255, 0.9);
+  text-shadow:
+    0 0 10px rgba(160, 220, 255, 0.8),
+    0 0 24px rgba(120, 200, 255, 0.5);
+}
+
+.arrowshot-close {
+  position: fixed;
+  top: 1.4rem;
+  right: 1.6rem;
+  background: transparent;
+  border: 1px solid rgba(180,230,255,0.3);
+  border-radius: 50%;
+  width: 2.4rem;
+  height: 2.4rem;
+  color: rgba(200,240,255,0.7);
+  font-size: 1rem;
+  cursor: pointer;
+  pointer-events: all;
+  z-index: 104;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.arrowshot-close:hover {
+  background: rgba(180,230,255,0.15);
+  color: #fff;
+}
+
+/* ── Message overlay ── */
+.message-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 22, 0.65);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  animation: veil-in 0.3s ease forwards;
+  perspective: 1400px;
+}
+
+.message-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: clamp(1rem, 2.5vw, 1.6rem) clamp(1.2rem, 3.5vw, 2.4rem);
+  border-radius: 1.2rem;
+  background: rgba(6, 14, 40, 0.85);
+  border: 1.5px solid rgba(180, 230, 255, 0.4);
+  box-shadow:
+    0 0 24px rgba(120, 200, 255, 0.22),
+    0 0 60px rgba(80, 160, 255, 0.10),
+    inset 0 0 18px rgba(100, 180, 255, 0.06);
+  animation: msg-approach 4s cubic-bezier(0.22, 0.85, 0.35, 1) forwards;
+  cursor: default;
+  max-width: 60vw;
+  transform-style: preserve-3d;
+}
+
+/* 画面の奥から4秒かけて迫ってくる */
+@keyframes msg-approach {
+  from {
+    opacity: 0;
+    transform: translateZ(-700px) scale(0.12);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+}
+
+.message-spear { border-color: rgba(255, 200, 100, 0.55); }
+.message-spear .message-text { color: rgba(255, 230, 160, 0.95); }
+.message-shield { border-color: rgba(140, 200, 255, 0.55); }
+.message-shield .message-text { color: rgba(200, 235, 255, 0.95); }
+
+.message-icon {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  filter: drop-shadow(0 0 14px rgba(200, 230, 255, 0.8));
+  animation: icon-pulse 1.8s ease-in-out infinite alternate;
+}
+
+/* メッセージ内の ♡ ♤ ♧ ◆ に色を付ける */
+.message-heart .message-icon {
+  color: #ff5577;
+  filter: drop-shadow(0 0 10px rgba(255, 80, 120, 0.9));
+}
+.message-spade .message-icon {
+  color: #cc66ff;
+  filter: drop-shadow(0 0 10px rgba(180, 80, 255, 0.9));
+}
+.message-club .message-icon {
+  color: #44dd88;
+  filter: drop-shadow(0 0 10px rgba(40, 220, 120, 0.9));
+}
+.message-diamond .message-icon {
+  color: #88ddff;
+  filter: drop-shadow(0 0 12px rgba(120, 200, 255, 0.9));
+  animation: icon-pulse 1.8s ease-in-out infinite alternate,
+             msg-diamond-sparkle 1.5s linear infinite;
+}
+@keyframes msg-diamond-sparkle {
+  0%, 100% { color: #88ddff; }
+  33%      { color: #ffdd88; }
+  66%      { color: #ff88dd; }
+}
+
+@keyframes icon-pulse {
+  from { filter: drop-shadow(0 0 10px rgba(200,230,255,0.5)); }
+  to   { filter: drop-shadow(0 0 26px rgba(220,245,255,0.9)); }
+}
+
+.message-text {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Georgia', serif;
+  font-size: clamp(1.1rem, 3vw, 2rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  text-align: center;
+  text-shadow:
+    0 0 14px currentColor,
+    0 0 30px rgba(140, 210, 255, 0.5);
+}
+
+.message-sub {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: clamp(0.6rem, 1.4vw, 0.8rem);
+  font-weight: 300;
+  letter-spacing: 0.24em;
+  color: rgba(180, 225, 255, 0.65);
+  text-align: center;
+}
+
+.message-close {
+  margin-top: 0.4rem;
+  padding: 0.3rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(180, 230, 255, 0.35);
+  border-radius: 2rem;
+  color: rgba(180, 230, 255, 0.7);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.message-close:hover {
+  background: rgba(180, 230, 255, 0.12);
+  color: #fff;
+  border-color: rgba(200, 240, 255, 0.6);
+}
+
+/* ── Opal (free) & Calendar (plan) forms ── */
+.message-textarea {
+  width: 100%;
+  min-width: 16rem;
+  max-width: 28rem;
+  padding: 0.8rem 1rem;
+  margin-top: 0.5rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(220, 245, 255, 0.95);
+  background: rgba(4, 12, 36, 0.6);
+  border: 1px solid rgba(160, 220, 255, 0.3);
+  border-radius: 0.6rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.message-textarea::placeholder {
+  color: rgba(160, 200, 230, 0.5);
+}
+.message-textarea:focus {
+  border-color: rgba(180, 230, 255, 0.6);
+  box-shadow: 0 0 12px rgba(120, 200, 255, 0.2);
+}
+
+.plan-picker {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+}
+
+.plan-select {
+  padding: 0.4rem 0.8rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(220, 245, 255, 0.95);
+  background: rgba(4, 12, 36, 0.6);
+  border: 1px solid rgba(160, 220, 255, 0.3);
+  border-radius: 0.4rem;
+  outline: none;
+  cursor: pointer;
+}
+.plan-select:focus {
+  border-color: rgba(180, 230, 255, 0.5);
+}
+
+.plan-saved-wrap {
+  width: 100%;
+  min-width: 16rem;
+  max-width: 28rem;
+  margin-top: 0.5rem;
+}
+
+.plan-saved {
+  padding: 0.8rem 1rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(180, 220, 255, 0.7);
+  background: rgba(4, 12, 36, 0.5);
+  border: 1px solid rgba(160, 220, 255, 0.2);
+  border-radius: 0.6rem;
+}
+
+.plan-list {
+  list-style: none;
+  margin: 0.5rem 0 0 0;
+  padding: 0;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.plan-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  margin-bottom: 0.35rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(220, 245, 255, 0.95);
+  background: rgba(4, 12, 36, 0.5);
+  border: 1px solid rgba(160, 220, 255, 0.25);
+  border-radius: 0.4rem;
+}
+
+.plan-list-item span {
+  flex: 1;
+  word-break: break-word;
+}
+
+.plan-item-delete {
+  flex-shrink: 0;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  color: rgba(255, 150, 130, 0.95);
+  background: transparent;
+  border: 1px solid rgba(255, 120, 100, 0.4);
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.plan-item-delete:hover {
+  background: rgba(255, 80, 60, 0.2);
+}
+
+.plan-add-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  align-items: center;
+}
+
+.plan-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.8rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(220, 245, 255, 0.95);
+  background: rgba(4, 12, 36, 0.6);
+  border: 1px solid rgba(160, 220, 255, 0.3);
+  border-radius: 0.4rem;
+  outline: none;
+}
+.plan-input::placeholder {
+  color: rgba(160, 200, 230, 0.5);
+}
+.plan-input:focus {
+  border-color: rgba(180, 230, 255, 0.5);
+}
+
+.plan-btn-add {
+  flex-shrink: 0;
+  background: rgba(80, 180, 255, 0.2);
+  border-color: rgba(120, 200, 255, 0.5);
+  color: rgba(220, 245, 255, 0.95);
+}
+.plan-btn-add:hover {
+  background: rgba(100, 200, 255, 0.35);
+}
+
+.plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.plan-btn {
+  padding: 0.4rem 1rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  border: 1px solid;
+}
+
+.plan-btn-save {
+  background: rgba(80, 180, 255, 0.25);
+  border-color: rgba(120, 200, 255, 0.6);
+  color: rgba(220, 245, 255, 0.95);
+}
+.plan-btn-save:hover {
+  background: rgba(100, 200, 255, 0.4);
+}
+
+.plan-btn-edit {
+  background: rgba(100, 180, 255, 0.2);
+  border-color: rgba(140, 210, 255, 0.5);
+  color: rgba(220, 245, 255, 0.95);
+}
+.plan-btn-edit:hover {
+  background: rgba(120, 200, 255, 0.35);
+}
+
+.plan-btn-delete {
+  background: transparent;
+  border-color: rgba(255, 120, 100, 0.5);
+  color: rgba(255, 180, 160, 0.95);
+}
+.plan-btn-delete:hover {
+  background: rgba(255, 80, 60, 0.2);
+}
+
+.plan-btn-back {
+  background: transparent;
+  border-color: rgba(180, 230, 255, 0.4);
+  color: rgba(200, 240, 255, 0.9);
+}
+.plan-btn-back:hover {
+  background: rgba(180, 230, 255, 0.15);
+}
+
+.message-opal .message-icon,
+.message-calendar .message-icon {
+  margin-bottom: 0.2rem;
+}
+
+/* Opal: 保存・過去のメモ */
+.message-opal-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.message-opal-history,
+.message-opal-back {
+  padding: 0.3rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(160, 220, 255, 0.35);
+  border-radius: 2rem;
+  color: rgba(180, 230, 255, 0.8);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.message-opal-history:hover,
+.message-opal-back:hover {
+  background: rgba(180, 230, 255, 0.1);
+  color: #fff;
+  border-color: rgba(200, 240, 255, 0.5);
+}
+
+.free-notes-list {
+  width: 100%;
+  min-width: 16rem;
+  max-width: 28rem;
+  max-height: 18rem;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.free-notes-item {
+  padding: 0.7rem 1rem;
+  background: rgba(4, 12, 36, 0.5);
+  border: 1px solid rgba(160, 220, 255, 0.25);
+  border-radius: 0.6rem;
+  box-shadow: 0 0 8px rgba(100, 180, 255, 0.08);
+}
+
+.free-notes-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.free-notes-date {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: rgba(180, 230, 255, 0.9);
+}
+
+.free-notes-delete {
+  padding: 0.2rem 0.6rem;
+  background: transparent;
+  border: 1px solid rgba(255, 140, 140, 0.4);
+  border-radius: 1rem;
+  color: rgba(255, 180, 180, 0.9);
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.free-notes-delete:hover {
+  background: rgba(255, 100, 100, 0.2);
+  color: #ffcccc;
+}
+
+.free-notes-content {
+  margin: 0;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(220, 245, 255, 0.9);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.free-notes-empty {
+  padding: 1rem;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(180, 220, 255, 0.6);
+  text-align: center;
+}
