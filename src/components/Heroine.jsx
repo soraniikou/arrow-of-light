@@ -77,7 +77,7 @@ export default function Heroine() {
 
         {/* Persistent click hint near the bow hand */}
         <div className="heroine-arrow-hint">
-          <span>弓をクリック</span>
+          <img src="/yumi2.png" style={{width:'40px',marginRight:'6px'}} /><span>弓をクリック</span>
         </div>
       </div>
 
