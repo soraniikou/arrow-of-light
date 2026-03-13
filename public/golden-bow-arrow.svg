@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" width="120" height="80">
+  <defs>
+    <linearGradient id="goldShine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#FFEC8B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#DAA520;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goldHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFF8DC;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#FFD700;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#B8860B;stop-opacity:0.8" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shimmer">
+      <feSpecularLighting result="specOut" specularConstant="1.2" specularExponent="40" lighting-color="#FFF8DC">
+        <fePointLight x="30" y="-20" z="50"/>
+      </feSpecularLighting>
+      <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+    </filter>
+  </defs>
+  <!-- Bow curve -->
+  <path d="M 15 40 Q 55 5, 95 40 Q 55 75, 15 40" 
+        fill="none" stroke="url(#goldShine)" stroke-width="6" stroke-linecap="round"
+        filter="url(#glow)"/>
+  <!-- Bow inner highlight -->
+  <path d="M 20 40 Q 55 12, 90 40" 
+        fill="none" stroke="url(#goldHighlight)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+  <!-- Arrow shaft -->
+  <line x1="5" y1="40" x2="115" y2="40" 
+        stroke="url(#goldShine)" stroke-width="3" stroke-linecap="round"
+        filter="url(#glow)"/>
+  <!-- Arrow head -->
+  <polygon points="110,35 120,40 110,45" fill="url(#goldShine)" filter="url(#glow)"/>
+  <!-- Arrow fletching -->
+  <path d="M 10 35 L 5 40 L 10 45" fill="none" stroke="url(#goldShine)" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

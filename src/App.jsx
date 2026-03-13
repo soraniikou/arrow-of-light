@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import BubbleCanvas from './components/BubbleCanvas'
 import ArrowCanvas from './components/ArrowCanvas'
-import Heroine from './components/Heroine'
 import './App.css'
 
 const PLAN_STORAGE_KEY = 'bow-arrow-plans'
