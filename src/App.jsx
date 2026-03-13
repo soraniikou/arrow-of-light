@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import BubbleCanvas from './components/BubbleCanvas'
 import ArrowCanvas from './components/ArrowCanvas'
 import './App.css'
