@@ -77,7 +77,7 @@ export default function Heroine() {
 
         {/* Persistent click hint near the bow hand */}
         <div className="heroine-arrow-hint">
-          <img src="/yumiya3-removebg-preview.png" style={{width:'160px',position:'absolute',bottom:'80px',right:'0',mixBlendMode:'multiply'}} />
+          <img src="/yumiya3-removebg-preview.png" style={{width:'160px',position:'absolute',bottom:'80px',right:'0',mixBlendMode:'multiply'}} /><div style={{position:'absolute',top:'42%',right:'8%',color:'white',fontSize:'13px',textShadow:'0 0 10px cyan',animation:'pulse 1.5s infinite',pointerEvents:'none'}}>✨ ここをタップ</div>
         </div>
       </div>
 
